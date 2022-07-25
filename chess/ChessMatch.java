@@ -19,10 +19,10 @@ public class ChessMatch {
     public ChessPiece[][] getPieces(){  //although there is no Pieces attribute, this "getter" return a matrix
                                         //this matrix is the [rows] and [columns] of the "board"
                                         //and in the board, we have a Piece[position.getRow()][position.getColumn()] pieces attribute
-        ChessPiece[][] mat = new ChessPiece[board.getRows()][board.getColums()];
+        ChessPiece[][] mat = new ChessPiece[board.getRows()][board.getColumns()];
 
         for (int i = 0; i < board.getRows(); i++) {
-            for (int j = 0; j < board.getColums(); j++) {
+            for (int j = 0; j < board.getColumns(); j++) {
                 
                 mat[i][j] = (ChessPiece) board.piece(i, j);
             }            
