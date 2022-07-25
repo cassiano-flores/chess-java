@@ -20,4 +20,11 @@ public class King extends ChessPiece {
             return "♔";
         }
     }
+
+    /*          if you cant execute the README command to set this UTF-8 symbols, trade for this
+    @Override
+    public String toString() {
+        return "K";
+    }
+    */
 }
