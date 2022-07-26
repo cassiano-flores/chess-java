@@ -1,7 +1,9 @@
 package application;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import chess.ChessException;
 import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.ChessPosition;
@@ -14,15 +16,26 @@ public class Program {
         Scanner sc = new Scanner(System.in);
         ChessMatch chessMatch = new ChessMatch(); //instance a chessMatch (the game)
 
-        while (true) {             //testing the performChessMove (pieces movement)
-            UI.printBoard(chessMatch.getPieces());    //with UI class, print all the board
-            System.out.print("\nSource: ");
-            ChessPosition source = UI.readChessPosition(sc);
+        while (true) {  //testing the performChessMove (pieces movement)
+            try{
+                UI.clearScreen();  //clear the last board every time that we have another one
+                UI.printBoard(chessMatch.getPieces());    //with UI class, print all the board
+                System.out.print("\nSource: ");
+                ChessPosition source = UI.readChessPosition(sc);
 
-            System.out.print("\nTarget: ");
-            ChessPosition target = UI.readChessPosition(sc);
+                System.out.print("\nTarget: ");
+                ChessPosition target = UI.readChessPosition(sc);
 
-            ChessPiece capturedPiece = chessMatch.performChessMove(source, target);
+                ChessPiece capturedPiece = chessMatch.performChessMove(source, target);
+            }
+            catch (ChessException e){    //already have messages to ChessException, so here, just getMessage
+                System.out.println(e.getMessage());
+                sc.nextLine();   //wait for the next enter (this is the time to user read the message)
+            }
+            catch (InputMismatchException e){  //already have messages to InputMismatchException, so here, just getMessage
+                System.out.println(e.getMessage());
+                sc.nextLine();
+            }
         }
     }
 }
