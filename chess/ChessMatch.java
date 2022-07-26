@@ -1,6 +1,8 @@
 package chess;
 
 import boardgame.Board;
+import boardgame.Piece;
+import boardgame.Position;
 import chess.pieces.King;
 import chess.pieces.Rook;
 
@@ -8,7 +10,7 @@ public class ChessMatch {
     
     private Board board;  //board attribute of Board type
 
-    public ChessMatch(){   //in the start of the game, the contructor will
+    public ChessMatch(){   //in the start of the game, the constructor will
                            //instance a new Board 8x8 matrix (like a chessboard)
                            //call the initialSetup (configure all the pieces on the board)
         board = new Board(8, 8);
@@ -27,6 +29,34 @@ public class ChessMatch {
             }            
         }
         return mat;  //return like a getter
+    }
+
+    //this method isnt the main method to move a piece, this is the action (the act of moving)
+    public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition){
+
+        Position source = sourcePosition.toPosition(); //convert the the "matrix" position to "chess" position
+        Position target = targetPosition.toPosition();
+
+        validateSourcePosition(source); //verify if there is a piece in the source position
+
+        Piece capturedPiece = makeMove(source, target);
+        return (ChessPiece) capturedPiece;
+    }
+
+    //method with the movement logic, remove from the original place (source), and put in the final place (target)
+    private Piece makeMove(Position source, Position target){
+
+        Piece sourcePiece = board.removePiece(source); //remove from the source (base) position
+        Piece capturedPiece = board.removePiece(target); //remove from the target (final) position (if exists)
+        board.placePiece(sourcePiece, target); //place the sourcePiece in the desired place (target) 
+        return capturedPiece;
+    }
+
+    private void validateSourcePosition(Position position){ //verify if there is a piece in the source position
+                                                            //(the base position)
+        if (!board.thereIsAPiece(position)){
+            throw new ChessException("There is no piece on source position");
+        }
     }
 
     private void placeNewPiece(char column, int row, ChessPiece piece){

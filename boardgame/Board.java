@@ -35,6 +35,23 @@ public class Board {
         piece.position = position;
     }
 
+    public Piece removePiece(Position position){  //method 4 to remove a piece from this position
+
+        if (!positionExists(position)){  //defensive programming
+            throw new BoardException("Position not on the board");
+        }
+        if (piece(position) == null){  //if this position is already null, so return null
+            return null;
+        }
+        else {
+            Piece aux = piece(position);
+            aux.position = null;
+            pieces[position.getRow()][position.getColumn()] = null;
+            return aux;  //make the piece position and matrix position (pieces) null
+                         //then, return the removed piece
+        }
+    }
+
     private boolean positionExists(int row, int column){
         return row >= 0 && row < rows && column >= 0 && column < columns;
         //this is the conditional to exists a position
