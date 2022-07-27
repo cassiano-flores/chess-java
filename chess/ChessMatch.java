@@ -31,6 +31,15 @@ public class ChessMatch {
         return mat;  //return like a getter
     }
 
+    public boolean[][] possibleMoves(ChessPosition sourcePosition){
+        //class to return the possible moves, and in the Program, we print this moves on the board
+
+        Position position = sourcePosition.toPosition();
+        validateSourcePosition(position);  //check before
+
+        return board.piece(position).possibleMoves();  //return the possible moves
+    }
+
     //this method isnt the main method to move a piece, this is the action (the act of moving)
     public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition){
 

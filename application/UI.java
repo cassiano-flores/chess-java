@@ -55,18 +55,35 @@ public class UI {
             System.out.print((8 - i) + "    ");  //first column is the numbers
 
             for (int j = 0; j < pieces.length; j++) {
-                printPiece(pieces[i][j]);   //call printPiece just below
-            }
+                printPiece(pieces[i][j], false);   //call printPiece just below
+            }                                               //print the background without colors, just the pieces (false in the background)
             System.out.println();
         }
         System.out.println("     a    b    c    d    e    f    g    h"); //last row is the letters
+    }
 
+        //print all the board with the possible moves (overload)
+    public static void printBoard(ChessPiece[][] pieces, boolean[][] possibleMoves){
+
+        for (int i = 0; i < pieces.length; i++) {
+            System.out.print((8 - i) + "    ");  //first column is the numbers
+
+            for (int j = 0; j < pieces.length; j++) {
+                printPiece(pieces[i][j], possibleMoves[i][j]);   //call printPiece with the possible moves
+            }                                                   //in every possible position
+            System.out.println();
+        }
+        System.out.println("     a    b    c    d    e    f    g    h"); //last row is the letters
     }
 
     //print just one Piece
-	private static void printPiece(ChessPiece piece) {
+	private static void printPiece(ChessPiece piece, boolean background) {
+        if (background){
+            System.out.print(ANSI_CYAN_BACKGROUND);  //if the background is true, will color with cyan
+        }                                           //in this case, true is a possible move
+
     	if (piece == null) {
-            System.out.print("-");
+            System.out.print("-" + ANSI_RESET);
         }
         else {
             if (piece.getColor() == Color.WHITE) {
