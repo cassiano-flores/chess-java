@@ -5,6 +5,11 @@ public class Position {
     private int row;
     private int column;
 
+    public void setValues(int row, int column){  //method to set new values to row and column (useful on pieces class)
+        this.row = row;
+        this.column = column;
+    }
+
     public Position(int row, int column) {
         this.row = row;
         this.column = column;
