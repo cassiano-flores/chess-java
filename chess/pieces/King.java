@@ -1,6 +1,7 @@
 package chess.pieces;
 
 import boardgame.Board;
+import boardgame.Position;
 import chess.ChessPiece;
 import chess.Color;
 
@@ -21,9 +22,83 @@ public class King extends ChessPiece {
         }
     }
 
+    private boolean canMove(Position position){  //verify if the King can move to a position
+
+        ChessPiece p = (ChessPiece) getBoard().piece(position); //p receives a possible position to move
+        return p == null || p.getColor() != getColor();   //verify if p is really a possible position
+    ///if p is null (free position) or in this position have a piece with different color (an opponent), is an possible position
+    }
+
     @Override //implement the abstract class from (ChessPiece -> Piece), just the King knows his possible moves
     public boolean[][] possibleMoves() {  //just to check, all the movements in a first moment is false
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
+
+        Position p = new Position(0, 0);  //just to help
+
+        //above -------------------------------------------------------------------------
+        p.setValues(position.getRow() - 1, position.getColumn());
+        //row - 1 because up in the matrix, the index of the row is decreasing
+
+        if (getBoard().positionExists(p) && canMove(p)){  //if the position above exists and the King can move
+            mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
+        }
+
+        //upper left diagonal --------------------------------------------------------------
+        p.setValues(position.getRow() - 1, position.getColumn() - 1);
+        //row - 1 because the upper left diagonal in the matrix, the row and column index decrease
+
+        if (getBoard().positionExists(p) && canMove(p)){  //if the position upper left diagonal exists and the King can move
+            mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
+        }
+
+        //left -------------------------------------------------------------------------
+        p.setValues(position.getRow(), position.getColumn() - 1);
+        //column - 1 because to the left in the matrix, the column index is decreasing
+
+        if (getBoard().positionExists(p) && canMove(p)){  //if the position left exists and the King can move
+            mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
+        }
+
+        //lower left diagonal ------------------------------------------------------------
+        p.setValues(position.getRow() + 1, position.getColumn() - 1);
+        //row - 1 because the lower left diagonal in the matrix, the row index increases and the column index decreases
+
+        if (getBoard().positionExists(p) && canMove(p)){  //if the position lower left diagonal exists and the King can move
+            mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
+        }
+
+        //below -------------------------------------------------------------------------
+        p.setValues(position.getRow() + 1, position.getColumn());
+        //row + 1 because down in the matrix, the column index is increasing
+
+        if (getBoard().positionExists(p) && canMove(p)){  //if the position below exists and the King can move
+            mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
+        }
+
+        //lower right diagonal -----------------------------------------------------------
+        p.setValues(position.getRow() + 1, position.getColumn() + 1);
+        //row - 1 because the lower right diagonal in the matrix, the row and column index increase
+
+        if (getBoard().positionExists(p) && canMove(p)){  //if the position lower right diagonal exists and the King can move
+            mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
+        }
+
+        //right -------------------------------------------------------------------------
+        p.setValues(position.getRow(), position.getColumn() + 1);
+        //column - 1 because to the right in the matrix, the column index is increasing
+
+        if (getBoard().positionExists(p) && canMove(p)){  //if the position right exists and the King can move
+            mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
+        }
+
+        //upper right diagonal -----------------------------------------------------------
+        p.setValues(position.getRow() - 1, position.getColumn() + 1);
+        //row - 1 because the upper right diagonal in the matrix, the row index decreases and the column index increases
+
+        if (getBoard().positionExists(p) && canMove(p)){  //if the position upper right diagonal exists and the King can move
+            mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
+        }
+
         return mat;
     }
 
