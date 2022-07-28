@@ -58,6 +58,10 @@ public class UI {
         printCapturedPieces(captured);    //print captured pieces
         System.out.println("\nTurn: " + chessMatch.getTurn());   //print the color turn
         System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());  //print the current player color
+    
+        if (chessMatch.getCheck()){   //if is in check, print this
+            System.out.println("CHECK!");
+        }
     }
 
     //print all the board

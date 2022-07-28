@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import boardgame.Board;
 import boardgame.Piece;
@@ -14,6 +15,7 @@ public class ChessMatch {
     private int turn;
     private Color currentPlayer;
     private Board board;  //board attribute of Board type
+    private boolean check;  //a boolean attribute starts for default as false
 
     private List<Piece> piecesOnTheBoard = new ArrayList<>();
     private List<Piece> capturedPieces = new ArrayList<>();
@@ -33,6 +35,10 @@ public class ChessMatch {
 
     public Color getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public boolean getCheck() {
+        return check;
     }
 
     public ChessPiece[][] getPieces(){  //although there is no Pieces attribute, this "getter" return a matrix
@@ -67,7 +73,21 @@ public class ChessMatch {
         validateSourcePosition(source); //verify if there is a piece in the source position
         validateTargetPosition(source, target); //verify if is a possible position to target
 
-        Piece capturedPiece = makeMove(source, target);
+        Piece capturedPiece = makeMove(source, target);  //capture a piece
+
+        if (testCheck(currentPlayer)){   //if the current player is now on check, he is wrong  (the "if" test assumes by default the possibility of "true")
+            undoMove(source, target, capturedPiece);
+            throw new ChessException("You can't put yourself in check");
+        }
+
+        //if the current player put his opponent in check, now check is true
+        if (testCheck(opponent(currentPlayer))){  
+            check = true;
+        }
+        else {
+            check = false;
+        }
+
         nextTurn();    //next player
         return (ChessPiece) capturedPiece;
     }
@@ -85,6 +105,20 @@ public class ChessMatch {
         }
 
         return capturedPiece;
+    }
+
+    //method to undo a movement, this will be useful in a check case, the player try to move a piece
+    //and the King stayed under attack, the play will be reversed and throw a exception
+    private void undoMove(Position source, Position target, Piece capturedPiece){
+
+        Piece p = board.removePiece(target); //remove from target
+        board.placePiece(p, source);  //put on source position again
+
+        if (capturedPiece != null){  //if a piece was captured, remove from captured pieces and add again on board
+            board.placePiece(capturedPiece, target);
+            capturedPieces.remove(capturedPiece);
+            piecesOnTheBoard.add(capturedPiece);
+        }
     }
 
     private void validateSourcePosition(Position position){ //verify if there is a piece in the source position
@@ -116,6 +150,56 @@ public class ChessMatch {
         else{
             currentPlayer = Color.WHITE;  //if black, then now is white
         }
+    }
+
+    private Color opponent(Color color){
+
+        if (color == Color.WHITE){  //if white, then the opponent is black
+            color = Color.BLACK;
+        }
+        else{
+            color = Color.WHITE;  //if black, then the opponent is white
+        }
+
+        return color;
+    }
+
+    //method to find a determined color king
+    private ChessPiece king(Color color){
+
+        //this list will go through the piecesOnTheBoard and add in the list all the same "color" pieces
+        List<Piece> list = piecesOnTheBoard.stream().filter(x -> ((ChessPiece)x).getColor() == color).collect(Collectors.toList());
+    
+        //and now, return a piece instance of King (will return just the color selected king)
+        for (Piece p : list) {
+
+            if (p instanceof King){
+                return (ChessPiece) p;
+            }
+        }
+        throw new IllegalStateException("There is no " + color + " king on the board");
+        //important: in this case, we want it to return the King that was traversed in the list
+        //but the compiler complains that there might be no return, so we should raise an exception
+        //*** this exception should NEVER be thrown! (there must always be the king at stake) ***
+    }
+
+    //method to check if the moment right now is a check situation (threatened king)
+    private boolean testCheck(Color color){
+
+        //convert the matrix king position to chess king position
+        Position kingPosition = king(color).getChessPosition().toPosition();  //** a variable kingPosition of the Position type (class made by me), take the king of an informed color, get king position and convert to chess position (all this things was made by me and not something standard from Java, this is really nice)
+        List<Piece> list = piecesOnTheBoard.stream().filter(x -> ((ChessPiece)x).getColor() == opponent(color)).collect(Collectors.toList());
+        //list contains all the opponent pieces from this color
+
+        for (Piece p : list) {  //for each opponent in the list
+            boolean[][] mat = p.possibleMoves();  //mat contains all the possible movements for this piece (p)
+
+            //verify if any of the opponents' possible moves are the King position
+            if (mat[kingPosition.getRow()][kingPosition.getColumn()]){
+                return true;  //if yes, this is a check situation (true)
+            }
+        }
+        return false;
     }
 
     private void placeNewPiece(char column, int row, ChessPiece piece){

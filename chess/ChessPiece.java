@@ -18,6 +18,10 @@ public abstract class ChessPiece extends Piece{ //chess is a layer higher than t
         return color;
     }
 
+    public ChessPosition getChessPosition(){      //return the chess position from matrix position
+        return ChessPosition.fromPosition(position);
+    }
+
     protected boolean isThereOpponentPiece(Position position){  //verify if there is an opponent piece in this position
 
         ChessPiece piece = (ChessPiece) getBoard().piece(position);  //piece receives a possible Opponent piece
