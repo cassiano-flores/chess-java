@@ -16,6 +16,7 @@ public class ChessMatch {
     private Color currentPlayer;
     private Board board;  //board attribute of Board type
     private boolean check;  //a boolean attribute starts for default as false
+    private boolean checkMate;
 
     private List<Piece> piecesOnTheBoard = new ArrayList<>();
     private List<Piece> capturedPieces = new ArrayList<>();
@@ -39,6 +40,10 @@ public class ChessMatch {
 
     public boolean getCheck() {
         return check;
+    }
+
+    public boolean getCheckMate() {
+        return checkMate;
     }
 
     public ChessPiece[][] getPieces(){  //although there is no Pieces attribute, this "getter" return a matrix
@@ -75,6 +80,7 @@ public class ChessMatch {
 
         Piece capturedPiece = makeMove(source, target);  //capture a piece
 
+        // check ------------------------------------------
         if (testCheck(currentPlayer)){   //if the current player is now on check, he is wrong  (the "if" test assumes by default the possibility of "true")
             undoMove(source, target, capturedPiece);
             throw new ChessException("You can't put yourself in check");
@@ -88,7 +94,15 @@ public class ChessMatch {
             check = false;
         }
 
-        nextTurn();    //next player
+        // checkmate --------------------------------------
+        if (testCheckMate(opponent(currentPlayer))){ //if the opponent of the current player is in checkmate
+            checkMate = true;                        //set checkMate to "true"  (end of the game)
+        }
+        else{
+
+            nextTurn();    //next player
+        }
+
         return (ChessPiece) capturedPiece;
     }
 
@@ -202,6 +216,39 @@ public class ChessMatch {
         return false;
     }
 
+    private boolean testCheckMate(Color color){  //method to check if the moment right now is a checkmate situation (threatened king)
+
+        if (!testCheck(color)){  //if just the testCheck is false, this isnt a checkmate
+            return false;
+        }
+        //this "list" contains all the pieces with the same color than mine
+        List<Piece> list = piecesOnTheBoard.stream().filter(x -> ((ChessPiece)x).getColor() == color).collect(Collectors.toList());
+        
+        for (Piece p : list) {    //for each piece, verify their possible moves
+            boolean[][] mat = p.possibleMoves();  //a possible move on this matrix, is "true"
+
+            for (int i = 0; i < board.getRows(); i++) {
+                for (int j = 0; j < board.getColumns(); j++) {
+
+                    if (mat[i][j]){  //if mat[i][j] is a possible move...
+                        Position source = ((ChessPiece) p).getChessPosition().toPosition();  //get the position to source...
+                        Position target = new Position(i, j);  //get the possible move to target...
+
+                        Piece capturedPiece = makeMove(source, target); //move to mat[i][j] position...
+                        boolean testCheck = testCheck(color);  //verify with this new position, if is still in check
+                        undoMove(source, target, capturedPiece);  //undo the test move
+
+                        if (!testCheck){  //if now isnt in "check", so this is not "checkmate"
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;   //if it goes through all possible moves of all pieces and always remains in check, it is checkmate
+    }
+
+
     private void placeNewPiece(char column, int row, ChessPiece piece){
         //informs the column (first), row, and then the piece (ChessPiece)
 
@@ -215,18 +262,11 @@ public class ChessMatch {
     //now, initialize a placeNewPiece with the chessboard coordinates (a1), and instance a new piece (ChessPiece piece)
                                                                             //with a board and color
 
-        placeNewPiece('c', 1, new Rook(board, Color.WHITE));
-        placeNewPiece('c', 2, new Rook(board, Color.WHITE));
-        placeNewPiece('d', 1, new King(board, Color.WHITE));
-        placeNewPiece('d', 2, new Rook(board, Color.WHITE));
-        placeNewPiece('e', 1, new Rook(board, Color.WHITE));
-        placeNewPiece('e', 2, new Rook(board, Color.WHITE));
+        placeNewPiece('h', 7, new Rook(board, Color.WHITE));
+        placeNewPiece('d', 1, new Rook(board, Color.WHITE));
+        placeNewPiece('e', 1, new King(board, Color.WHITE));
 
-        placeNewPiece('c', 7, new Rook(board, Color.BLACK));
-        placeNewPiece('c', 8, new Rook(board, Color.BLACK));
-        placeNewPiece('d', 7, new Rook(board, Color.BLACK));
-        placeNewPiece('d', 8, new King(board, Color.BLACK));
-        placeNewPiece('e', 7, new Rook(board, Color.BLACK));
-        placeNewPiece('e', 8, new Rook(board, Color.BLACK));
+        placeNewPiece('b', 8, new Rook(board, Color.BLACK));
+        placeNewPiece('a', 8, new King(board, Color.BLACK));
     }
 }

@@ -19,7 +19,7 @@ public class Program {
         ChessMatch chessMatch = new ChessMatch(); //instance a chessMatch (the game)
         List <ChessPiece> captured = new ArrayList<>();
 
-        while (true) {  //testing the performChessMove (pieces movement)
+        while (!chessMatch.getCheckMate()) {  //run the game while doesnt have any checkmate
             try{
                 UI.clearScreen();  //clear the last board every time that we have another one
                 UI.printMatch(chessMatch, captured);//with UI class, print all the match settings (board, turn, currentPlayer, captured pieces)
@@ -48,5 +48,7 @@ public class Program {
                 sc.nextLine();
             }
         }
+        UI.clearScreen();         //when the game is over (checkmate), clear the screen one more time
+        UI.printMatch(chessMatch, captured);  //and print the match one more time (with the checkmate message)
     }
 }

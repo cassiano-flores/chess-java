@@ -52,15 +52,23 @@ public class UI {
         }
     }
 
+    //print all the configs of the match in the screen
     public static void printMatch(ChessMatch chessMatch, List<ChessPiece> captured){
         printBoard(chessMatch.getPieces());   //print the board
         System.out.println();
         printCapturedPieces(captured);    //print captured pieces
         System.out.println("\nTurn: " + chessMatch.getTurn());   //print the color turn
-        System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());  //print the current player color
-    
-        if (chessMatch.getCheck()){   //if is in check, print this
-            System.out.println("CHECK!");
+
+        if (!chessMatch.getCheckMate()){  //do this only if isnt in checkmate (because the while is still running)
+            System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());  //print the current player color
+        
+            if (chessMatch.getCheck()){   //if is in check, print this
+                System.out.println("CHECK!");
+            }
+        }
+        else{  //if has a checkmate and the game is over, print the winner
+            System.out.println("CHECKMATE!");
+            System.out.println("Winner: " + chessMatch.getCurrentPlayer());
         }
     }
 
