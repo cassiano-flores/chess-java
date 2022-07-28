@@ -8,13 +8,25 @@ import chess.pieces.Rook;
 
 public class ChessMatch {
     
+    private int turn;
+    private Color currentPlayer;
     private Board board;  //board attribute of Board type
 
     public ChessMatch(){   //in the start of the game, the constructor will
                            //instance a new Board 8x8 matrix (like a chessboard)
                            //call the initialSetup (configure all the pieces on the board)
         board = new Board(8, 8);
+        turn = 1;
+        currentPlayer = Color.WHITE;   //in a chessgame, the white pieces starts
         initialSetup();
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+
+    public Color getCurrentPlayer() {
+        return currentPlayer;
     }
 
     public ChessPiece[][] getPieces(){  //although there is no Pieces attribute, this "getter" return a matrix
@@ -50,6 +62,7 @@ public class ChessMatch {
         validateTargetPosition(source, target); //verify if is a possible position to target
 
         Piece capturedPiece = makeMove(source, target);
+        nextTurn();    //next player
         return (ChessPiece) capturedPiece;
     }
 
@@ -67,6 +80,9 @@ public class ChessMatch {
         if (!board.thereIsAPiece(position)){
             throw new ChessException("There is no piece on source position");
         }
+        if (currentPlayer != ((ChessPiece)board.piece(position)).getColor()){  //verify if the chosen piece have the same color that the current player
+            throw new ChessException("The chosen piece is not yours");
+        }
         if (!board.piece(position).isThereAnyPossibleMove()){
             throw new ChessException("There is no possible moves for the chosen piece");
         }
@@ -76,6 +92,17 @@ public class ChessMatch {
 
         if (!board.piece(source).possibleMove(target)){  //verify if the chosen target is a possible position to chosen piece
             throw new ChessException("This piece can't move to target position");
+        }
+    }
+
+    private void nextTurn(){  //verify which color piece is playing and alternate
+
+        turn++;
+        if (currentPlayer == Color.WHITE){  //if white, then now is black
+            currentPlayer = Color.BLACK;
+        }
+        else{
+            currentPlayer = Color.WHITE;  //if black, then now is white
         }
     }
 

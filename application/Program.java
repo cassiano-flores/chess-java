@@ -19,7 +19,7 @@ public class Program {
         while (true) {  //testing the performChessMove (pieces movement)
             try{
                 UI.clearScreen();  //clear the last board every time that we have another one
-                UI.printBoard(chessMatch.getPieces());    //with UI class, print all the board
+                UI.printMatch(chessMatch);    //with UI class, print all the match settings (board, turn, currentPlayer)
                 System.out.print("\nSource: ");
                 ChessPosition source = UI.readChessPosition(sc);
 
