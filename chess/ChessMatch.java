@@ -109,7 +109,8 @@ public class ChessMatch {
     //method with the movement logic, remove from the original place (source), and put in the final place (target)
     private Piece makeMove(Position source, Position target){
 
-        Piece sourcePiece = board.removePiece(source); //remove from the source (base) position
+        ChessPiece sourcePiece = (ChessPiece) board.removePiece(source); //remove from the source (base) position
+        sourcePiece.increaseMoveCount();  //+1 movement
         Piece capturedPiece = board.removePiece(target); //remove from the target (final) position (if exists)
         board.placePiece(sourcePiece, target); //place the sourcePiece in the desired place (target)
 
@@ -125,7 +126,8 @@ public class ChessMatch {
     //and the King stayed under attack, the play will be reversed and throw a exception
     private void undoMove(Position source, Position target, Piece capturedPiece){
 
-        Piece p = board.removePiece(target); //remove from target
+        ChessPiece p = (ChessPiece) board.removePiece(target); //remove from target
+        p.decreaseMoveCount();  //-1 movement
         board.placePiece(p, source);  //put on source position again
 
         if (capturedPiece != null){  //if a piece was captured, remove from captured pieces and add again on board

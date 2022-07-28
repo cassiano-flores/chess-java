@@ -8,6 +8,7 @@ import boardgame.Position;
 public abstract class ChessPiece extends Piece{ //chess is a layer higher than the board,
                                        //and therefore pulls the respective classes
     private Color color;
+    private int moveCount;  //count movements
 
     public ChessPiece(Board board, Color color) {
         super(board);  //this.rows = rows | this.colums = colums | pieces = new Piece[rows][colums] | + color
@@ -16,6 +17,18 @@ public abstract class ChessPiece extends Piece{ //chess is a layer higher than t
 
     public Color getColor() {   //getColor
         return color;
+    }
+    
+    public int getMoveCount() {
+        return moveCount;
+    }
+
+    public void increaseMoveCount(){  //just increase +1 to move count
+        moveCount++;
+    }
+
+    public void decreaseMoveCount(){  //just decrease -1 to move count
+        moveCount--;
     }
 
     public ChessPosition getChessPosition(){      //return the chess position from matrix position
