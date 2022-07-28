@@ -75,29 +75,41 @@ public class UI {
     //print all the board
     public static void printBoard(ChessPiece[][] pieces){
 
+        System.out.println("   ┌―――――――――――――――――――――――――――――――――――――――――――┐");  //outline from above
         for (int i = 0; i < pieces.length; i++) {
-            System.out.print((8 - i) + "    ");  //first column is the numbers
+            System.out.print((8 - i) + "  │   ");  //first column is the numbers and left outline
 
             for (int j = 0; j < pieces.length; j++) {
                 printPiece(pieces[i][j], false);   //call printPiece just below
-            }                                               //print the background without colors, just the pieces (false in the background)
+                                                            //print the background without colors, just the pieces (false in the background)
+                if (j == pieces.length - 1){
+                    System.out.print("│");  //right outline
+                }
+            }                                               
             System.out.println();
         }
-        System.out.println("     a    b    c    d    e    f    g    h"); //last row is the letters
+        System.out.println("   └―――――――――――――――――――――――――――――――――――――――――――┘");  //bottom contour
+        System.out.println("       a    b    c    d    e    f    g    h"); //last row is the letters
     }
 
         //print all the board with the possible moves (overload)
     public static void printBoard(ChessPiece[][] pieces, boolean[][] possibleMoves){
 
+        System.out.println("   ┌―――――――――――――――――――――――――――――――――――――――――――┐");  //outline from above
         for (int i = 0; i < pieces.length; i++) {
-            System.out.print((8 - i) + "    ");  //first column is the numbers
+            System.out.print((8 - i) + "  │   ");  //first column is the numbers and left outline
 
             for (int j = 0; j < pieces.length; j++) {
                 printPiece(pieces[i][j], possibleMoves[i][j]);   //call printPiece with the possible moves
-            }                                                   //in every possible position
+                                                                 //in every possible position
+                if (j == pieces.length - 1){
+                    System.out.print("│");  //right outline
+                }
+            }                                                   
             System.out.println();
         }
-        System.out.println("     a    b    c    d    e    f    g    h"); //last row is the letters
+        System.out.println("   └―――――――――――――――――――――――――――――――――――――――――――┘");  //bottom contour
+        System.out.println("       a    b    c    d    e    f    g    h"); //last row is the letters
     }
 
     //print just one Piece

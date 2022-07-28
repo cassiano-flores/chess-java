@@ -12,7 +12,7 @@ import chess.ChessPosition;
 
 public class Program {
 
-    //testing
+    //the game
     public static void main(String[] args) {
         
         Scanner sc = new Scanner(System.in);
