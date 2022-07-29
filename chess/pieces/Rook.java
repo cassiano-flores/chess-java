@@ -69,7 +69,7 @@ public class Rook extends ChessPiece{
 
         //right -------------------------------------------------------------------------
         p.setValues(position.getRow(), position.getColumn() + 1);
-        //column - 1 because to the right in the matrix, the column index is increasing
+        //column + 1 because to the right in the matrix, the column index is increasing
 
         while (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) { //check the position
             
