@@ -30,7 +30,7 @@ public class Bishop extends ChessPiece {
 
         //upper left diagonal --------------------------------------------------------------------
         p.setValues(position.getRow() - 1, position.getColumn() - 1);
-        //row - 1 because up in the matrix, the index of the row is decreasing
+        //row - 1 and column - 1 because the upper left diagonal in the matrix, the row and column index decrease
 
         while (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) { //check the position
             
@@ -43,7 +43,7 @@ public class Bishop extends ChessPiece {
 
         //upper right diagonal --------------------------------------------------------------------
         p.setValues(position.getRow() - 1, position.getColumn() + 1);
-        //row - 1 because up in the matrix, the index of the row is decreasing
+        //row - 1 and column + 1 because the upper right diagonal in the matrix, the row index decreases and the column index increases
 
         while (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) { //check the position
             
@@ -56,7 +56,7 @@ public class Bishop extends ChessPiece {
 
         //lower left diagonal --------------------------------------------------------------------
         p.setValues(position.getRow() + 1, position.getColumn() - 1);
-        //row - 1 because up in the matrix, the index of the row is decreasing
+        //row + 1 and column - 1 because the lower left diagonal in the matrix, the row index increases and the column index decreases
 
         while (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) { //check the position
             
@@ -69,7 +69,7 @@ public class Bishop extends ChessPiece {
 
         //lower right diagonal --------------------------------------------------------------------
         p.setValues(position.getRow() + 1, position.getColumn() + 1);
-        //row - 1 because up in the matrix, the index of the row is decreasing
+        //row + 1 and column + 1 because the lower right diagonal in the matrix, the row and column index increase
 
         while (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) { //check the position
             
