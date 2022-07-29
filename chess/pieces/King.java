@@ -45,7 +45,7 @@ public class King extends ChessPiece {
 
         //upper left diagonal --------------------------------------------------------------
         p.setValues(position.getRow() - 1, position.getColumn() - 1);
-        //row - 1 because the upper left diagonal in the matrix, the row and column index decrease
+        //row - 1 and column - 1 because the upper left diagonal in the matrix, the row and column index decrease
 
         if (getBoard().positionExists(p) && canMove(p)){  //if the position upper left diagonal exists and the King can move
             mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
@@ -61,7 +61,7 @@ public class King extends ChessPiece {
 
         //lower left diagonal ------------------------------------------------------------
         p.setValues(position.getRow() + 1, position.getColumn() - 1);
-        //row - 1 because the lower left diagonal in the matrix, the row index increases and the column index decreases
+        //row + 1 and column - 1 because the lower left diagonal in the matrix, the row index increases and the column index decreases
 
         if (getBoard().positionExists(p) && canMove(p)){  //if the position lower left diagonal exists and the King can move
             mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
@@ -77,7 +77,7 @@ public class King extends ChessPiece {
 
         //lower right diagonal -----------------------------------------------------------
         p.setValues(position.getRow() + 1, position.getColumn() + 1);
-        //row - 1 because the lower right diagonal in the matrix, the row and column index increase
+        //row + 1 and column + 1 because the lower right diagonal in the matrix, the row and column index increase
 
         if (getBoard().positionExists(p) && canMove(p)){  //if the position lower right diagonal exists and the King can move
             mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
@@ -85,7 +85,7 @@ public class King extends ChessPiece {
 
         //right -------------------------------------------------------------------------
         p.setValues(position.getRow(), position.getColumn() + 1);
-        //column - 1 because to the right in the matrix, the column index is increasing
+        //column + 1 because to the right in the matrix, the column index is increasing
 
         if (getBoard().positionExists(p) && canMove(p)){  //if the position right exists and the King can move
             mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
@@ -93,7 +93,7 @@ public class King extends ChessPiece {
 
         //upper right diagonal -----------------------------------------------------------
         p.setValues(position.getRow() - 1, position.getColumn() + 1);
-        //row - 1 because the upper right diagonal in the matrix, the row index decreases and the column index increases
+        //row - 1 and column + 1 because the upper right diagonal in the matrix, the row index decreases and the column index increases
 
         if (getBoard().positionExists(p) && canMove(p)){  //if the position upper right diagonal exists and the King can move
             mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
