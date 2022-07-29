@@ -2,13 +2,17 @@ package chess.pieces;
 
 import boardgame.Board;
 import boardgame.Position;
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.Color;
 
 public class King extends ChessPiece {
 
-    public King(Board board, Color color) {   //the same constructor of ChessPiece class
+    private ChessMatch chessMatch;  //attribute for castling special move 
+
+    public King(Board board, Color color, ChessMatch chessMatch) {   //the same constructor of ChessPiece class
         super(board, color);
+        this.chessMatch = chessMatch;
     }
 
     @Override
@@ -27,6 +31,11 @@ public class King extends ChessPiece {
         ChessPiece p = (ChessPiece) getBoard().piece(position); //p receives a possible position to move
         return p == null || p.getColor() != getColor();   //verify if p is really a possible position
     ///if p is null (free position) or in this position have a piece with different color (an opponent), is an possible position
+    }
+
+    private boolean testRookCastling(Position position){  //test if a Rook is able to castling play
+        ChessPiece p = (ChessPiece) getBoard().piece(position);
+        return p != null && p instanceof Rook && p.getColor() == getColor() && p.getMoveCount() == 0;
     }
 
     @Override //implement the abstract class from (ChessPiece -> Piece), just the King knows his possible moves
@@ -99,6 +108,35 @@ public class King extends ChessPiece {
             mat[p.getRow()][p.getColumn()] = true;        //set this matrix position to true
         }
 
+        //special move castling -----------------------------------------------------------
+        if (getMoveCount() == 0 && !chessMatch.getCheck()){
+
+            //special move castling kingside rook
+            Position leftRook = new Position(position.getRow(), position.getColumn() + 3); //rook position
+            if (testRookCastling(leftRook)){
+                
+                Position p1 = new Position(position.getRow(), position.getColumn() + 1); //first position next to king
+                Position p2 = new Position(position.getRow(), position.getColumn() + 2); //second position next to king
+
+                if (getBoard().piece(p1) == null && getBoard().piece(p2) == null){  //if both positions are null
+                    mat[position.getRow()][position.getColumn() + 2] = true;  //thats a possible movement
+                }
+            }
+
+            //special move castling queenside rook
+            Position rightRook = new Position(position.getRow(), position.getColumn() - 4);
+            if (testRookCastling(rightRook)){
+                
+                Position p1 = new Position(position.getRow(), position.getColumn() - 1); //first position before the king
+                Position p2 = new Position(position.getRow(), position.getColumn() - 2); //second position before the king
+                Position p3 = new Position(position.getRow(), position.getColumn() - 3); //third position before the king
+
+                if (getBoard().piece(p1) == null && getBoard().piece(p2) == null && getBoard().piece(p3) == null){  //if the three positions are null
+                    mat[position.getRow()][position.getColumn() - 2] = true;  //thats a possible movement
+                }
+            }
+        }
+ 
         return mat;
     }
 
