@@ -2,13 +2,17 @@ package chess.pieces;
 
 import boardgame.Board;
 import boardgame.Position;
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.Color;
 
 public class Pawn extends ChessPiece {
 
-    public Pawn(Board board, Color color) {   //the same constructor of ChessPiece class
+    private ChessMatch chessMatch;   //attribute for en passant special move 
+
+    public Pawn(Board board, Color color, ChessMatch chessMatch) {   //the same constructor of ChessPiece class
         super(board, color);
+        this.chessMatch = chessMatch;
     }
 
     @Override
@@ -62,8 +66,30 @@ public class Pawn extends ChessPiece {
             if (getBoard().positionExists(p) && isThereOpponentPiece(p)){
                 mat[p.getRow()][p.getColumn()] = true;  //set to true (can move)
             }
-        }
 
+            //special move en passant white
+            if (position.getRow() == 3){  //this special move only is accepted when the pawn is on matrix row 3 (chess row 5)
+
+                Position left = new Position(position.getRow(), position.getColumn() - 1); //special move on the left of the piece
+                if (getBoard().positionExists(left) && isThereOpponentPiece(left) && getBoard().piece(left) == chessMatch.getEnPassantVulnerable()){
+                        //the position on the board needs to exists
+                        //and in this position have to be an opponent
+                        //and the piece on the left have to be vulnerable
+
+                    mat[left.getRow() - 1][left.getColumn()] = true;  //the position above the piece is a possible move (left)
+                }
+
+                Position right = new Position(position.getRow(), position.getColumn() + 1); //special move on the right of the piece
+                if (getBoard().positionExists(right) && isThereOpponentPiece(right) && getBoard().piece(right) == chessMatch.getEnPassantVulnerable()){
+                    //the position on the board needs to exists
+                    //and in this position have to be an opponent
+                    //and the piece on the left have to be vulnerable
+
+                mat[right.getRow() - 1][right.getColumn()] = true;  //the position above the piece is a possible move (right)
+                }
+            }
+        }
+        
         //black Pawn ----------------------------------------------------------------
         else{
             p.setValues(position.getRow() + 1, position.getColumn());
@@ -97,6 +123,28 @@ public class Pawn extends ChessPiece {
             //when the black pawn lower diagonal have an opponent, he can move too
             if (getBoard().positionExists(p) && isThereOpponentPiece(p)){
                 mat[p.getRow()][p.getColumn()] = true;  //set to true (can move)
+            }
+
+            //special move en passant black
+            if (position.getRow() == 4){  //this special move only is accepted when the black pawn is on matrix row 4 (chess row 4)
+
+                Position left = new Position(position.getRow(), position.getColumn() - 1); //special move on the left of the piece
+                if (getBoard().positionExists(left) && isThereOpponentPiece(left) && getBoard().piece(left) == chessMatch.getEnPassantVulnerable()){
+                        //the position on the board needs to exists
+                        //and in this position have to be an opponent
+                        //and the piece on the left have to be vulnerable
+
+                    mat[left.getRow() + 1][left.getColumn()] = true;  //the position below the piece is a possible move (left)
+                }
+
+                Position right = new Position(position.getRow(), position.getColumn() + 1); //special move on the right of the piece
+                if (getBoard().positionExists(right) && isThereOpponentPiece(right) && getBoard().piece(right) == chessMatch.getEnPassantVulnerable()){
+                    //the position on the board needs to exists
+                    //and in this position have to be an opponent
+                    //and the piece on the left have to be vulnerable
+
+                mat[right.getRow() + 1][right.getColumn()] = true;  //the position below the piece is a possible move (right)
+                }
             }
         }
 
