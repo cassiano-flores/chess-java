@@ -21,7 +21,8 @@ public class ChessMatch {
     private Board board;  //board attribute of Board type
     private boolean check;  //a boolean attribute starts for default as false
     private boolean checkMate;
-    private ChessPiece enPassantVulnerable;    //attribute for en passant special move 
+    private ChessPiece enPassantVulnerable;    //attribute for en passant special move
+    private ChessPiece promoted;    //attribute for promoted special move
 
     private List<Piece> piecesOnTheBoard = new ArrayList<>();
     private List<Piece> capturedPieces = new ArrayList<>();
@@ -53,6 +54,10 @@ public class ChessMatch {
 
     public ChessPiece getEnPassantVulnerable() {
         return enPassantVulnerable;
+    }
+
+    public ChessPiece getPromoted() {
+        return promoted;
     }
 
     public ChessPiece[][] getPieces(){  //although there is no Pieces attribute, this "getter" return a matrix
@@ -97,6 +102,18 @@ public class ChessMatch {
 
         ChessPiece movedPiece = (ChessPiece)board.piece(target);  //store the target piece (the last piece moved)
 
+        //special move promotion    (have to implement before the testCheck, because the opponent might be in check after a promotion)
+        promoted = null;
+
+        if (movedPiece instanceof Pawn){  //if is a Pawn
+                    //the last row of white Pawn is 0                                           the last row of black Pawn is 7
+            if ((movedPiece.getColor() == Color.WHITE && target.getRow() == 0) || (movedPiece.getColor() == Color.BLACK && target.getRow() == 7)){
+
+                promoted = (ChessPiece)board.piece(target);  //promoted is the target pawn
+                promoted = replacePromotedPiece("Q");  //replace the target pawn for the chosen piece (replace)
+            }
+        }
+
         //if the current player put his opponent in check, now check is true
         if (testCheck(opponent(currentPlayer))){  
             check = true;
@@ -124,6 +141,37 @@ public class ChessMatch {
         }
 
         return (ChessPiece) capturedPiece;
+    }
+
+    public ChessPiece replacePromotedPiece(String type){
+
+        if (promoted == null){
+            throw new IllegalStateException("There is no piece to be promoted");
+        }
+        //possible choices
+        if (!type.equals("B") && !type.equals("N") && !type.equals("R") && !type.equals("Q")){
+            return promoted;
+        }
+
+        Position pos = promoted.getChessPosition().toPosition();  //get the promoted piece
+        Piece p = board.removePiece(pos);  //remove from the board the promoted piece (the Pawn)
+        piecesOnTheBoard.remove(p);  //remove from the piecesOnTheBoard list the promoted piece (the Pawn)
+        //need to do that because the polymorphism and the public accesses
+
+        ChessPiece newPiece = newPiece(type, promoted.getColor()); //newPiece is one of the letters (B, N, R or Q) and the same color of the promoted piece
+        board.placePiece(newPiece, pos);  //place the newPiece on the promoted position "pos"
+        piecesOnTheBoard.add(newPiece);  //newPiece on the list of pieces on the board
+
+        return newPiece;
+    }
+
+    //method to create a new piece instance (used to special move promoted, replacePromotedPiece)
+    private ChessPiece newPiece(String type, Color color){
+
+        if (type.equals("B")) return new Bishop(board, color);
+        if (type.equals("N")) return new Knight(board, color);
+        if (type.equals("R")) return new Rook(board, color);
+        return new Queen(board, color);
     }
 
     //method with the movement logic, remove from the original place (source), and put in the final place (target)

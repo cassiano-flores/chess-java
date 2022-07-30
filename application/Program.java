@@ -38,6 +38,19 @@ public class Program {
                 if (capturedPiece != null){     //if the captured piece is not null, add to captured list
                     captured.add(capturedPiece);
                 }
+
+                if (chessMatch.getPromoted() != null){   //if there is a piece to be promoted, ask for the user
+
+                    System.out.print("Enter piece for promotion (B/N/R/Q): ");
+                    String type = sc.nextLine().toUpperCase();
+
+                    //invalid value, repeat
+                    while (!type.equals("B") && !type.equals("N") && !type.equals("R") && !type.equals("Q")){
+                        System.out.print("Invalid value! Enter piece for promotion (B/N/R/Q): ");
+                        type = sc.nextLine().toUpperCase();
+                    }
+                    chessMatch.replacePromotedPiece(type);  //replace for what is typed
+                }
             }
             catch (ChessException e){    //already have messages to ChessException, so here, just getMessage
                 System.out.println(e.getMessage());
